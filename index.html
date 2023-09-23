@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予定&いつ何したか共有</title>
+    <style>
+        /* ここにCSSスタイルを追加 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #0077b6;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        #calendar {
+            /* カレンダーのスタイルを設定 */
+        }
+
+        #event-form {
+            /* 予定追加フォームのスタイルを設定 */
+        }
+
+        #event-list {
+            /* 予定リストのスタイルを設定 */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>予定&いつ何したか共有</h1>
+    </header>
+    <div id="calendar">
+        <!-- カレンダーの表示部分 -->
+    </div>
+    <div id="event-form">
+        <!-- 予定を追加するためのフォーム -->
+        <h2>予定を追加</h2>
+        <label for="event-name">名前:</label>
+        <input type="text" id="event-name" required>
+        <label for="event-title">予定タイトル:</label>
+        <input type="text" id="event-title" required>
+        <label for="event-date">日付:</label>
+        <input type="date" id="event-date" required>
+        <button id="add-event">追加</button>
+    </div>
+    <div id="event-list">
+        <!-- 予定のリストを表示する部分 -->
+        <h2>予定&いつ何したかリスト</h2>
+        <ul id="event-items"></ul>
+    </div>
+    <script>
+        // ローカルストレージからユーザーIDを取得または設定
+        let userID = localStorage.getItem('userID');
+        if (!userID) {
+            userID = generateRandomID();
+            localStorage.setItem('userID', userID);
+        }
+
+        // ランダムなIDを生成
+        function generateRandomID() {
+            return Math.random().toString(36).substring(2, 10);
+        }
+
+        // 予定を追加する処理
+        document.getElementById('add-event').addEventListener('click', () => {
+            const eventName = document.getElementById('event-name').value;
+            const eventTitle = document.getElementById('event-title').value;
+            const eventDate = document.getElementById('event-date').value;
+
+            // ここで予定を追加するAPI呼び出しを行うなどの処理を実行
+
+            // 予定追加後、フォームをクリア
+            document.getElementById('event-name').value = '';
+            document.getElementById('event-title').value = '';
+            document.getElementById('event-date').value = '';
+
+            // 予定をローカルストレージに保存
+            const eventList = JSON.parse(localStorage.getItem('events')) || [];
+            eventList.push({ userID: userID, name: eventName, title: eventTitle, date: eventDate });
+            localStorage.setItem('events', JSON.stringify(eventList));
+
+            // 予定をリストに表示
+            updateEventList();
+        });
+
+        // 予定を削除する処理
+        function deleteEvent(index) {
+            const eventList = JSON.parse(localStorage.getItem('events')) || [];
+            if (eventList[index] && eventList[index].userID === userID) {
+                eventList.splice(index, 1);
+                localStorage.setItem('events', JSON.stringify(eventList));
+                updateEventList();
+            } else {
+                alert('この予定は削除できません。');
+            }
+        }
+
+        // 予定リストを更新
+        function updateEventList() {
+            const eventList = JSON.parse(localStorage.getItem('events')) || [];
+            const eventListElement = document.getElementById('event-items');
+            eventListElement.innerHTML = '';
+            eventList.forEach((event, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${event.name}: ${event.title} (${event.date})`;
+                if (event.userID === userID) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = '削除';
+                    deleteButton.addEventListener('click', () => deleteEvent(index));
+                    listItem.appendChild(deleteButton);
+                }
+                eventListElement.appendChild(listItem);
+            });
+        }
+
+        // ページ読み込み時に予定リストを表示
+        updateEventList();
+    </script>
+</body>
+</html>
