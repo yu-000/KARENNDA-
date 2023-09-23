@@ -118,18 +118,25 @@
             eventList.forEach((event, index) => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${event.name}: ${event.title} (${event.date})`;
-                if (event.userID === userID) {
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = '削除';
-                    deleteButton.addEventListener('click', () => deleteEvent(index));
-                    listItem.appendChild(deleteButton);
-                }
                 eventListElement.appendChild(listItem);
             });
         }
 
+        // インターネット上の情報を取得して表示する関数の例
+        function fetchAndDisplayInternetData() {
+            // ここで外部データを取得し、表示する処理を実行
+            // 例: データを取得して表示
+            const internetData = "これはインターネット上から取得したデータです。";
+            const internetDataElement = document.createElement('p');
+            internetDataElement.textContent = internetData;
+            document.body.appendChild(internetDataElement);
+        }
+
         // ページ読み込み時に予定リストを表示
         updateEventList();
+
+        // ページ読み込み時にインターネット上のデータを取得して表示
+        fetchAndDisplayInternetData();
     </script>
         <div id="author-info">
         <!-- 作者情報を表示 -->
