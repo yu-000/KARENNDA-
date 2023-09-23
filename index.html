@@ -33,6 +33,11 @@
         #event-list {
             /* 予定リストのスタイルを設定 */
         }
+                #author-info {
+            /* 作者情報のスタイルを設定 */
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -126,5 +131,9 @@
         // ページ読み込み時に予定リストを表示
         updateEventList();
     </script>
+        <div id="author-info">
+        <!-- 作者情報を表示 -->
+        <p>このカレンダーは作成者によって作成されました。</p>
+    </div>
 </body>
 </html>
